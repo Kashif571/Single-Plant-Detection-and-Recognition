@@ -5,7 +5,16 @@ import os
 cascade = cv2.CascadeClassifier('./golden_pothos_cascade.xml')
 
 #Reading Image
-img = cv2.imread(r'./Golden Pothos/9.jpg')
+raw_img = cv2.imread(r'./Golden Pothos/11.jpg')
+
+#Percent of original size
+scale_percent = 60 
+width = int(raw_img.shape[1] * scale_percent / 100)
+height = int(raw_img.shape[0] * scale_percent / 100)
+dimensions = (width, height)
+
+#Resizing Image
+img = cv2.resize(raw_img, dimensions, interpolation = cv2.INTER_AREA)
 
 #Adding Median Blur
 blur=cv2.medianBlur(img,9)
@@ -14,8 +23,7 @@ blur=cv2.medianBlur(img,9)
 gray_Image = cv2.cvtColor(blur, cv2.COLOR_BGR2GRAY)
 
 #Detecting Plant
-detection_result = cascade.detectMultiScale(gray_Image, scaleFactor=1.1, minNeighbors=9)
-
+detection_result = cascade.detectMultiScale(gray_Image, scaleFactor=1.0485258, minNeighbors=6, minSize=(100,100))
 print(detection_result)
 
 for (x,y,w,h) in detection_result:
