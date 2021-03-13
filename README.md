@@ -6,7 +6,8 @@ It is the custom cascade made for Golden Pothos using Cascade Trainer GUI Softwa
 Link of software:
 https://amin-ahmadi.com/cascade-trainer-gui/
 
-#
+#Plant Detection
+In Plant Detection.py file the whole code is written for detection and recognition.
 
 
 
