@@ -5,7 +5,7 @@ import os
 cascade = cv2.CascadeClassifier('./golden_pothos_cascade.xml')
 
 #Reading Image
-raw_img = cv2.imread(r'./Golden Pothos/11.jpg')
+raw_img = cv2.imread(r'./Golden Pothos/3.jpg')
 
 #Percent of original size
 scale_percent = 60 
@@ -16,25 +16,15 @@ dimensions = (width, height)
 #Resizing Image
 img = cv2.resize(raw_img, dimensions, interpolation = cv2.INTER_AREA)
 
-#Adding Gaussian Blur
-blur=cv2.GaussianBlur(img,(13,13),cv2.BORDER_DEFAULT)
-
-#Detecting Edges with Canny
-canny = cv2.Canny(blur, 125,175)
-
-#Adding Dilation
-dilate=cv2.dilate(canny, (3,3),iterations=1)
-
 #Converting to Gray Image
-#gray_Image = cv2.cvtColor(dilate, cv2.COLOR_BGR2GRAY)
+gray_Image = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+
+#Adding Gaussian Blur
+blur=cv2.GaussianBlur(gray_Image,(13,13),cv2.BORDER_DEFAULT)
 
 #Detecting Plant
 detection_result, rejectLevels, levelWeights =cascade.detectMultiScale3(blur, scaleFactor=1.0485258, minNeighbors=6, minSize=(30,30),outputRejectLevels = 1)
 
-# print(rejectLevels)
-# print(levelWeights)
-# print(detection_result)
-# print(detection_result)
 greaterweightindex = 0
 currentweight = levelWeights[0]
 
@@ -42,26 +32,19 @@ currentweight = levelWeights[0]
 for (weight) in levelWeights:
     if weight > currentweight:
         greaterweightindex = greaterweightindex+1
-        currentweight = currentweight + 1
+        currentweight = weight
 
-#Detected Area 
+#Highest Confidence Area 
 x = detection_result[greaterweightindex][0]
 y = detection_result[greaterweightindex][1]
 w = detection_result[greaterweightindex][2]
 h = detection_result[greaterweightindex][3]
 
-# print(greaterweightindex)
-# print(currentweight)
-
-# print (x)
-# print (y)
-# print (w)
-# print (h)
-
+#Modifying Cofidence
 confidence= round(currentweight[0], 2)
 finalconfidence= confidence * 100
 
-#Draw Rectangle
+#Drawing Rectangle
 cv2.rectangle(img,(x,y), (x+w, y+h), (0,0,255), thickness=2)
 cv2.rectangle(img,(x,y-35), (x+w, y), (0,0,255), thickness=-1) 
 
